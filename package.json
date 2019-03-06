@@ -1,0 +1,29 @@
+{
+  "name": "spinal-organ-calculate-dashboard-data",
+  "version": "2.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d  build -s inline",
+    "start": "npm run build && node build/index.js",
+    "pm2": "npm run build && pm2 start build/index.js --name spinal-organ-calculate-dashboard-data"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
+    "spinal-env-viewer-context-geographic-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-geographic-service.git",
+    "spinal-env-viewer-dashboard-standard-service": "git+https://github.com/spinalcom/spinal-env-viewer-dashboard-standard-service.git",
+    "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
+    "spinal-model-bmsnetwork": "git+https://github.com/spinalcom/spinal-model-bmsnetwork.git",
+    "spinal-env-viewer-plugin-bimobjectservice": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-bimobjectservice.git"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1"
+  }
+}
