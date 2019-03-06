@@ -6,7 +6,9 @@ import {
 
 import SpinalCalNode from "./SpinalCalNode";
 import SpinalCalculate from './SpinalCalculate'
-
+import {
+  config
+} from '../config'
 
 class Main {
 
@@ -53,14 +55,6 @@ class Main {
 
 }
 
-
-let config = {
-  user: 168,
-  password: "JHGgcz45JKilmzknzelf65ddDadggftIO98P",
-  host: "localhost",
-  port: 7777,
-  path: "/__users__/admin/GSE_CECOBRON_ARCHI"
-}
 
 
 
