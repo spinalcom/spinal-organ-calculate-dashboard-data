@@ -5,7 +5,7 @@ This calculation is done following rules (sum, average, maximum, minimum or refe
 
 # Config
 
-The organ must get the forgeFile to work. for this you must specify the user information, host, port and forgeFile path. This data must be in config.js file, so Edit it.
+The organ must get the forgeFile to work. for this you must specify the user information, host, port and forgeFile path. This data must be in config.json file, so Edit it.
 
 # Installation
 
