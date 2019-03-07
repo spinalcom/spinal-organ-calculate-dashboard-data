@@ -6,7 +6,6 @@ import {
 
 import SpinalCalNode from "./SpinalCalNode";
 import SpinalCalculate from './SpinalCalculate'
-
 import config from "../config.json";
 
 
@@ -49,8 +48,6 @@ class Main {
       })
     })
   }
-
-
 
 
 }
