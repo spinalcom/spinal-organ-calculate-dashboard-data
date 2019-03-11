@@ -16,6 +16,9 @@ import {
   InputDataEndpointType
 } from "./constants";
 import SpinalCalEndpoint from "./SpinalCalEndpoint";
+import {
+  deepEqual
+} from "assert";
 
 
 
@@ -76,18 +79,22 @@ export default class SpinalCalNode {
     let refId = this.getRef(endpointType);
     if (refId) {
 
-
       // Si la node a une reference
       let node = SpinalGraphService.getRealNode(refId);
 
       if (node) {
+
         return Promise.resolve(new SpinalCalEndpoint(node));
       } else {
 
         return this.node.find(BIMOBJECT_ENDPOINTS, (node) => {
           return node.info.id.get() === refId;
         }).then(el => {
-          return new SpinalCalEndpoint(el[0]);
+          if (el && el.length > 0) {
+            return new SpinalCalEndpoint(el[0]);
+          }
+          return undefined;
+
         })
 
       }
@@ -184,7 +191,6 @@ export default class SpinalCalNode {
 
         if (mapped && mapped.node.info.id.get() !== endpointNode.node
           .info.id.get()) {
-
           mapped.unbindEndpoint();
         }
 

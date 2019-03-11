@@ -23,6 +23,8 @@ export default class SpinalCalEndpoint {
       });
 
       this.bindProcess = this.modelToBind.bind(callback);
+    }).catch(() => {
+      console.log(this.node);
     });
   }
 
