@@ -16,9 +16,6 @@ import {
   InputDataEndpointType
 } from "./constants";
 import SpinalCalEndpoint from "./SpinalCalEndpoint";
-import {
-  deepEqual
-} from "assert";
 
 
 
