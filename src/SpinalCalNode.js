@@ -253,6 +253,35 @@ export default class SpinalCalNode {
     })
   }
 
+
+  getUnit(type) {
+    return this.getChildren().then(children => {
+      let promises = [];
+      children.forEach(element => {
+        promises.push(element.getEndpointNodeByType(type));
+      });
+
+      return Promise.all(promises).then(childEndpoint => {
+
+        let pro = childEndpoint.map(el => {
+          if (el) {
+            return el.node.element.load();
+          }
+          return;
+        });
+
+        return Promise.all(pro).then(endpoints => {
+          return endpoints.map(el => {
+            return el.unit ? el.unit.get() : undefined
+          }).filter(el => typeof el !== "undefined")[0];
+        })
+
+      })
+
+    })
+  }
+
+
   calculateParent(type) {
 
     this.getParents().then(parents => {
@@ -266,31 +295,35 @@ export default class SpinalCalNode {
 
               if (rule !== dashboardVariables.CALCULATION_RULES
                 .reference) {
-                let childInfo = await parent.getChildrenEndpoints(
+                let values = await parent.getChildrenEndpoints(
                   type); // getChildren EndpointsValue and unit
+
+                let unit = await parent.getUnit(type)
+
                 switch (rule) {
                   case dashboardVariables.CALCULATION_RULES.sum:
                     (() => {
-                      let sum = childInfo.values.reduce((a,
+                      let sum = values.reduce((a,
                         b) => {
                         return a + b;
                       }, 0);
-                      parentEndpoint.setEndpoint(sum).then(
-                        () => {
-                          parent.calculateParent(type);
-                        })
+                      parentEndpoint.setEndpoint(sum, unit)
+                        .then(
+                          () => {
+                            parent.calculateParent(type);
+                          })
 
                     })();
                     break;
                   case dashboardVariables.CALCULATION_RULES
                   .average:
                     (() => {
-                      let sum = childInfo.values.reduce((a,
+                      let sum = values.reduce((a,
                         b) => {
                         return a + b;
                       }, 0);
-                      parentEndpoint.setEndpoint(sum / childInfo
-                          .values.length)
+                      parentEndpoint.setEndpoint(sum / values
+                          .length, unit)
                         .then(() => {
                           parent.calculateParent(type);
                         })
@@ -299,14 +332,14 @@ export default class SpinalCalNode {
                     break;
                   case dashboardVariables.CALCULATION_RULES.max:
                     parentEndpoint.setEndpoint(Math.max(...
-                        childInfo.values))
+                        values), unit)
                       .then(() => {
                         parent.calculateParent(type);
                       })
                     break;
                   case dashboardVariables.CALCULATION_RULES.min:
                     parentEndpoint.setEndpoint(Math.min(...
-                        childInfo.values))
+                        values), unit)
                       .then(() => {
                         parent.calculateParent(type);
                       })
@@ -325,13 +358,21 @@ export default class SpinalCalNode {
 
                   if (ref) {
                     ref.getEndpointNodeByType(type).then(
-                      endpoint => {
-                        if (endpoint) {
-                          endpoint.getCurrentValue().then(
-                            value => {
-                              parentEndpoint.setEndpoint(
-                                value);
-                            })
+                      endpointCalNode => {
+                        if (endpointCalNode) {
+                          endpointCalNode.getCurrentValue()
+                            .then(
+                              async value => {
+                                let endpoint =
+                                  await endpointCalNode
+                                  .node.element.load();
+                                let unit = endpoint.unit ?
+                                  endpoint.unit.get() :
+                                  undefined
+                                parentEndpoint
+                                  .setEndpoint(
+                                    value, unit);
+                              })
                         }
                       })
                   }

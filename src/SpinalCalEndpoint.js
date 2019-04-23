@@ -50,10 +50,12 @@ export default class SpinalCalEndpoint {
     return this.node.info.dash_cal_rule.ref.get();
   }
 
-  setEndpoint(value) {
+  setEndpoint(value, unit) {
     return this.node.element.load().then(element => {
       spinalServiceTimeseries.pushFromEndpoint(this.node.id.get(), value);
       element.currentValue.set(value);
+
+      if (unit && element.unit) element.unit.set(unit)
     });
   }
 
