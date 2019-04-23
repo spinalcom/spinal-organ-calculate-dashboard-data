@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d  build -s inline",
-    "start": "npm run build && node build/index.js",
+    "start": "npm run build && node build/index.js > test.txt",
     "pm2": "npm run build && pm2 start build/index.js --name spinal-organ-calculate-dashboard-data"
   },
   "keywords": [],

@@ -9,6 +9,9 @@ const {
 import {
   SpinalServiceTimeseries
 } from 'spinal-model-timeseries';
+import {
+  SpinalGraphService
+} from "spinal-env-viewer-graph-service";
 
 let spinalServiceTimeseries = new SpinalServiceTimeseries();
 
@@ -52,7 +55,9 @@ export default class SpinalCalEndpoint {
 
   setEndpoint(value, unit) {
     return this.node.element.load().then(element => {
-      spinalServiceTimeseries.pushFromEndpoint(this.node.id.get(), value);
+      SpinalGraphService._addNode(this.node)
+      spinalServiceTimeseries.pushFromEndpoint(this.node.info.id.get(),
+        value);
       element.currentValue.set(value);
 
       if (unit && element.unit) element.unit.set(unit)

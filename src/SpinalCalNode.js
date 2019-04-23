@@ -271,9 +271,12 @@ export default class SpinalCalNode {
         });
 
         return Promise.all(pro).then(endpoints => {
+          endpoints = endpoints.filter(el => typeof el !==
+            "undefined")
+
           return endpoints.map(el => {
             return el.unit ? el.unit.get() : undefined
-          }).filter(el => typeof el !== "undefined")[0];
+          })[0];
         })
 
       })
