@@ -258,80 +258,89 @@ export default class SpinalCalNode {
     this.getParents().then(parents => {
       parents.forEach(parent => {
 
-        parent.getEndpointNodeByType(type).then(async parentEndpoint => {
-          if (parentEndpoint) {
+        parent.getEndpointNodeByType(type).then(
+          async parentEndpoint => {
+            if (parentEndpoint) {
 
-            let rule = parentEndpoint.getRule();
+              let rule = parentEndpoint.getRule();
 
-            if (rule !== dashboardVariables.CALCULATION_RULES
-              .reference) {
-              let values = await parent.getChildrenEndpoints(
-                type);
-              switch (rule) {
-                case dashboardVariables.CALCULATION_RULES.sum:
-                  (() => {
-                    let sum = values.reduce((a, b) => {
-                      return a + b;
-                    }, 0);
-                    parentEndpoint.setEndpoint(sum).then(() => {
-                      parent.calculateParent(type);
-                    })
+              if (rule !== dashboardVariables.CALCULATION_RULES
+                .reference) {
+                let childInfo = await parent.getChildrenEndpoints(
+                  type); // getChildren EndpointsValue and unit
+                switch (rule) {
+                  case dashboardVariables.CALCULATION_RULES.sum:
+                    (() => {
+                      let sum = childInfo.values.reduce((a,
+                        b) => {
+                        return a + b;
+                      }, 0);
+                      parentEndpoint.setEndpoint(sum).then(
+                        () => {
+                          parent.calculateParent(type);
+                        })
 
-                  })();
-                  break;
-                case dashboardVariables.CALCULATION_RULES.average:
-                  (() => {
-                    let sum = values.reduce((a, b) => {
-                      return a + b;
-                    }, 0);
-                    parentEndpoint.setEndpoint(sum / values.length)
+                    })();
+                    break;
+                  case dashboardVariables.CALCULATION_RULES
+                  .average:
+                    (() => {
+                      let sum = childInfo.values.reduce((a,
+                        b) => {
+                        return a + b;
+                      }, 0);
+                      parentEndpoint.setEndpoint(sum / childInfo
+                          .values.length)
+                        .then(() => {
+                          parent.calculateParent(type);
+                        })
+
+                    })();
+                    break;
+                  case dashboardVariables.CALCULATION_RULES.max:
+                    parentEndpoint.setEndpoint(Math.max(...
+                        childInfo.values))
                       .then(() => {
                         parent.calculateParent(type);
                       })
+                    break;
+                  case dashboardVariables.CALCULATION_RULES.min:
+                    parentEndpoint.setEndpoint(Math.min(...
+                        childInfo.values))
+                      .then(() => {
+                        parent.calculateParent(type);
+                      })
+                    break;
+                }
+              } else {
+                let id = parentEndpoint.getReference();
+                parent.getChildren().then(el => {
+                  let ref;
+                  for (let i = 0; i < el.length; i++) {
+                    const element = el[i];
+                    if (element.node.info.id.get() == id)
+                      ref =
+                      element;
+                  }
 
-                  })();
-                  break;
-                case dashboardVariables.CALCULATION_RULES.max:
-                  parentEndpoint.setEndpoint(Math.max(...values))
-                    .then(() => {
-                      parent.calculateParent(type);
-                    })
-                  break;
-                case dashboardVariables.CALCULATION_RULES.min:
-                  parentEndpoint.setEndpoint(Math.min(...values))
-                    .then(() => {
-                      parent.calculateParent(type);
-                    })
-                  break;
+                  if (ref) {
+                    ref.getEndpointNodeByType(type).then(
+                      endpoint => {
+                        if (endpoint) {
+                          endpoint.getCurrentValue().then(
+                            value => {
+                              parentEndpoint.setEndpoint(
+                                value);
+                            })
+                        }
+                      })
+                  }
+
+                })
               }
-            } else {
-              let id = parentEndpoint.getReference();
-              parent.getChildren().then(el => {
-                let ref;
-                for (let i = 0; i < el.length; i++) {
-                  const element = el[i];
-                  if (element.node.info.id.get() == id) ref =
-                    element;
-                }
 
-                if (ref) {
-                  ref.getEndpointNodeByType(type).then(
-                    endpoint => {
-                      if (endpoint) {
-                        endpoint.getCurrentValue().then(
-                          value => {
-                            parentEndpoint.setEndpoint(
-                              value);
-                          })
-                      }
-                    })
-                }
-
-              })
             }
-
-          }
-        })
+          })
 
       })
     })

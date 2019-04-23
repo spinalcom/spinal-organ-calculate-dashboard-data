@@ -6,6 +6,12 @@ const {
   dashboardVariables
 } = require("spinal-env-viewer-dashboard-standard-service");
 
+import {
+  SpinalServiceTimeseries
+} from 'spinal-model-timeseries';
+
+let spinalServiceTimeseries = new SpinalServiceTimeseries();
+
 export default class SpinalCalEndpoint {
   constructor(node) {
     this.node = node;
@@ -46,6 +52,7 @@ export default class SpinalCalEndpoint {
 
   setEndpoint(value) {
     return this.node.element.load().then(element => {
+      spinalServiceTimeseries.pushFromEndpoint(this.node.id.get(), value);
       element.currentValue.set(value);
     });
   }
