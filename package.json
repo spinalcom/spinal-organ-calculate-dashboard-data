@@ -19,7 +19,7 @@
     "spinal-env-viewer-dashboard-standard-service": "git+https://github.com/spinalcom/spinal-env-viewer-dashboard-standard-service.git",
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
     "spinal-model-bmsnetwork": "git+https://github.com/spinalcom/spinal-model-bmsnetwork.git",
-    "spinal-env-viewer-plugin-bimobjectservice": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-bimobjectservice.git"
+    "spinal-env-viewer-plugin-forge": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-forge.git"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
